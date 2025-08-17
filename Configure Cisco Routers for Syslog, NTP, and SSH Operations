@@ -65,7 +65,6 @@ exit
 -ping 192.168.1.5
 
 ## 📸 Screenshots
-(Add relevant screenshots here)
 
 ## 🛠 Steps Taken (Task 2)
 1. Configure NTP Server
@@ -105,7 +104,7 @@ R3(config)# ntp authentication-key 1 md5 cisco123
 -R3(config)# service timestamps log datetime msec
 
 ## 📸 Screenshots
-(Add relevant screenshots here)
+
 
 ## 🛠 Steps Taken (Task 3)
 1. Configure the routers to identify the remote host (Syslog Server) that will receive logging messages
@@ -119,7 +118,7 @@ R3(config)# ntp authentication-key 1 md5 cisco123
 3. Check Syslog on the Syslog Server under services to ensure events are being logged
 
 ## 📸 Screenshots
-(Add relevant screenshots here)
+
 
 ## 🛠 Steps Taken (Task 4)
 1. Configure a domain name of ccnasecurity.com on R3
@@ -155,11 +154,14 @@ R3(config)# ntp authentication-key 1 md5 cisco123
 9. Connect to R3 using SSH on R2
 -R2# ssh –v 2 –l SSHadmin 10.2.2.1
 
+## 📸 Screenshots
 
 
 ## 📚 Key Learnings
-- How RBAC enforces least privilege in Azure.
-- Difference between built-in and custom roles.
+-Real-world routing security with OSPF MD5
+-Proper log centralization practices with Syslog
+-Device time accuracy for event correlation with NTP
+-Secure remote management using SSH over the CLI
 
-## 🔗 References
+
 
