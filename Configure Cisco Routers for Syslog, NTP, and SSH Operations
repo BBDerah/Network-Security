@@ -1,0 +1,165 @@
+# Lab 01: Configure Cisco Routers for Syslog, NTP, and SSH Operations
+
+## 🎯 Objective
+   Task 1- Configure OSPF MD5 authentication.
+•  Task 2- Configure NTP.
+•  Task 3- Configure routers to log messages to the syslog server.
+•  Task 4- Configure R3 to support SSH connections.
+
+## 🛠 Steps Taken (Task 1)
+1. set up the topology
+
+2. Configured devices in accordance with presented addressing table
+- to give the routers multiple ports for serial cable connectivity. I turned off the routers and added an HWIC-2T cover and switched them back on 
+
+3. Configure OSPF MD5 authentication and MD5 key for all the routers in area 0.
+.Router 1
+-conf t
+router ospf 1
+ router-id 1.1.1.1
+ network 192.168.1.0 0.0.0.255 area 0
+ network 10.1.1.0 0.0.0.3 area 0
+exit
+
+! Enable MD5 Authentication on the serial link
+interface s0/1/0
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 cisco123
+exit
+
+.Router 2
+conf t
+router ospf 1
+ router-id 2.2.2.2
+ network 10.1.1.0 0.0.0.3 area 0
+ network 10.2.2.0 0.0.0.3 area 0
+exit
+
+interface s0/1/0
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 cisco123
+exit
+
+interface s0/1/1
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 cisco123
+exit
+
+.Router 3
+conf t
+router ospf 1
+ router-id 3.3.3.3
+ network 192.168.3.0 0.0.0.255 area 0
+ network 10.2.2.0 0.0.0.3 area 0
+exit
+
+interface s0/1/1
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 cisco123
+exit
+
+4.Very OSPF route is working 
+-show ip ospf neighbor (on each router)
+
+5. Ping PC-C (192.168.3.5) to NTP Server
+-ping 192.168.1.5
+
+## 📸 Screenshots
+(Add relevant screenshots here)
+
+## 🛠 Steps Taken (Task 2)
+1. Configure NTP Server
+. On the NTP server click NTP under services and enable NTP
+. Set key to 1 and Password to cisco123 as previously stated 
+. Set Date and Time to current Date and time 
+
+2. Configure R1, R2, and R3 as NTP clients
+-conf t
+ntp server 192.168.1.5
+exit
+(On each router)
+.Verify NTP Cinfiguration 
+-show ntp associations
+
+3. Configure routers to update hardware clock
+-ntp update-calendar (On each router)
+.Verify clock configuration
+-show clock
+
+4. Configure NTP authentication on R1, R2, and R3 using key 1 and password Cisco123
+-R1(config)# ntp authenticate
+R1(config)# ntp trusted-key 1
+R1(config)# ntp authentication-key 1 md5 cisco123
+
+-R2(config)# ntp authenticate
+R2(config)# ntp trusted-key 1
+R2(config)# ntp authentication-key 1 md5 cisco123
+
+-R3(config)# ntp authenticate
+R3(config)# ntp trusted-key 1
+R3(config)# ntp authentication-key 1 md5 cisco123
+
+5. Configure routers to timestamp log messages
+-R1(config)# service timestamps log datetime msec
+-R2(config)# service timestamps log datetime msec
+-R3(config)# service timestamps log datetime msec
+
+## 📸 Screenshots
+(Add relevant screenshots here)
+
+## 🛠 Steps Taken (Task 3)
+1. Configure the routers to identify the remote host (Syslog Server) that will receive logging messages
+-R1(config)# logging host 192.168.1.6
+-R2(config)# logging host 192.168.1.6
+-R3(config)# logging host 192.168.1.6
+
+2. Verify logging is enabled
+-show logging
+
+3. Check Syslog on the Syslog Server under services to ensure events are being logged
+
+## 📸 Screenshots
+(Add relevant screenshots here)
+
+## 🛠 Steps Taken (Task 4)
+1. Configure a domain name of ccnasecurity.com on R3
+-R3(config)# ip domain-name ccnasecurity.com
+
+2. Create a user ID of SSHadmin with the highest possible privilege level and a secret password of ciscosshpa55.
+-R3(config)# username SSHadmin privilege 15 secret cisco123
+
+3. Use the local user accounts for mandatory login and validation. Accept only SSH connections
+-R3(config)# line vty 0 4
+-R3(config-line)# login local
+-R3(config-line)# transport input ssh
+
+4. Erase existing key pairs on R3.
+-R3(config)# crypto key zeroize rsa
+
+5. Generate the RSA encryption key pair for R3
+-R3(config)# crypto key generate rsa
+.Input 1024 when prompted for "How many bits in the module" 
+
+6. Verify the SSH configuration
+-show ip ssh
+
+7. Configure SSH timeouts and authentication parameters.
+ .Set the timeout to 90 seconds, the number of authentication retries to 2, and the version to 2
+ -R3(config)# ip ssh time-out 90
+ -R3(config)# ip ssh authentication-retries 2
+ -R3(config)# ip ssh version 2
+
+8. Connect to R3 using SSH on PC-C
+-PC> ssh –l SSHadmin 192.168.3.1
+
+9. Connect to R3 using SSH on R2
+-R2# ssh –v 2 –l SSHadmin 10.2.2.1
+
+
+
+## 📚 Key Learnings
+- How RBAC enforces least privilege in Azure.
+- Difference between built-in and custom roles.
+
+## 🔗 References
+
