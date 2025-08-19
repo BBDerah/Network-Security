@@ -10,6 +10,20 @@
 1. set up the topology
 
 2. Configured devices in accordance with presented addressing table
+
+| Device   | Interface    | IP Address  | Subnet Mask     | Default Gateway | Switch Port |
+| -------- | ------------ | ----------- | --------------- | --------------- | ----------- |
+| **R1**   | G0/1         | 192.168.1.1 | 255.255.255.0   | N/A             | S1 F0/5     |
+|          | S0/0/0 (DCE) | 10.1.1.1    | 255.255.255.252 | N/A             | N/A         |
+| **R2**   | S0/0/0       | 10.1.1.2    | 255.255.255.252 | N/A             | N/A         |
+|          | S0/0/1 (DCE) | 10.2.2.2    | 255.255.255.252 | N/A             | N/A         |
+| **R3**   | G0/1         | 192.168.3.1 | 255.255.255.0   | N/A             | S3 F0/5     |
+|          | S0/0/1       | 10.2.2.1    | 255.255.255.252 | N/A             | N/A         |
+| **PC-A** | NIC          | 192.168.1.5 | 255.255.255.0   | 192.168.1.1     | S1 F0/6     |
+| **PC-B** | NIC          | 192.168.1.6 | 255.255.255.0   | 192.168.1.1     | S2 F0/18    |
+| **PC-C** | NIC          | 192.168.3.5 | 255.255.255.0   | 192.168.3.1     | S3 F0/18    |
+
+
 - to give the routers multiple ports for serial cable connectivity. I turned off the routers and added an HWIC-2T cover and switched them back on 
 
 3. Configure OSPF MD5 authentication and MD5 key for all the routers in area 0.
