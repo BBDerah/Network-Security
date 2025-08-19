@@ -58,7 +58,7 @@ interface s0/1/1
  ip ospf message-digest-key 1 md5 cisco123
 exit
 
-4.Very OSPF route is working 
+4.Verify OSPF route is working 
 -show ip ospf neighbor (on each router)
 
 5. Ping PC-C (192.168.3.5) to NTP Server
