@@ -1,0 +1,79 @@
+# Lab 01: Configuring Extended ACLs – Scenario 1
+# Lab 02: Configure, Apply and Verify an Extended Numbered ACL - Scenario 2
+
+## 🎯 Objective (Lab 1)
+   Two employees need access to services provided by the server. PC1 needs only FTP access while PC2 needs only web access. Both computers are able to ping the server, but not each other.
+   Task 1:  Configure, Apply and Verify an Extended Numbered ACL
+   Task 2: Configure, Apply and Verify an Extended Named ACL
+
+## 🛠 Steps Taken (Task 1)
+1. set up the topology
+
+2. Configured devices in accordance with presented addressing table
+| Device     | Interface | IP Address   | Subnet Mask     | Default Gateway |
+| ---------- | --------- | ------------ | --------------- | --------------- |
+| **R1**     | G0/0      | 172.22.34.65 | 255.255.255.224 | N/A             |
+|            | G0/1      | 172.22.34.97 | 255.255.255.240 | N/A             |
+|            | G0/2      | 172.22.34.1  | 255.255.255.192 | N/A             |
+| **Server** | NIC       | 172.22.34.62 | 255.255.255.192 | 172.22.34.1     |
+| **PC1**    | NIC       | 172.22.34.66 | 255.255.255.224 | 172.22.34.65    |
+| **PC2**    | NIC       | 172.22.34.98 | 255.255.255.240 | 172.22.34.97    |
+
+- to give the routers multiple ports for serial cable connectivity. I turned off the routers and added an HWIC-1GE-SFP cover and switched them back on 
+
+2. Configure an ACL to permit FTP and ICMP
+-conf t
+access-list 100 permit tcp host 172.22.34.64 0.0.0.31 host 172.22.34.62 eq ftp
+access-list 100 permit icmp any any   ! (Allow ping for testing)
+access-list 100 deny ip any any       ! (Deny everything else)
+exit
+
+3. Apply ACL to interface G0/0 (inbound from PC1)
+-interface g0/0
+ip access-group 100 in
+
+4. Verify
+-On PC1:
+-FTP to server = should work
+-HTTP or Telnet = should fail
+-Ping server = should work (because ICMP allowed)
+-Ping PC2 = should fail (denied by ACL)
+
+## 📸 Screenshots
+Screenshots (43,44,45,46)
+
+## 🛠 Steps Taken (Task 2)
+
+1. Configure an ACL to permit HTTP access and ICMP.
+-conf t
+ip access-list extended PC2_WEB_ACCESS
+ permit tcp host 172.22.34.98 host 172.22.34.62 eq www
+ permit icmp any any
+ deny ip any any
+exit
+
+2. Apply ACL to G0/1 (inbound from PC2)
+-interface g0/1
+ip access-group PC2_WEB_ACCESS in
+
+3. Verify 
+-On PC2:
+HTTP (web) access to server = should work
+FTP/Telnet = should fail
+Ping server = should work
+Ping PC1 = should fail
+
+## 📸 Screenshots
+screenshots (47,48)
+
+Scenario 2
+
+## 🎯 Objective (Lab 2)
+   In this scenario, devices on one LAN are allowed to remotely access devices in another LAN using the SSH protocol. Besides ICMP, all traffic from other networks is denied.
+   Task 1:  Configure, Apply and Verify an Extended Numbered ACL
+
+
+
+
+## 📚 Key Learnings
+-
