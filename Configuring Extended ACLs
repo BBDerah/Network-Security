@@ -97,7 +97,13 @@ access-list 199 permit icmp 10.101.117.0 0.0.0.31 10.101.117.32 0.0.0.15
 access-list 199 deny ip any any
 exit
 
-4. Apply the ACL to the G0/2 interface
+4. Apply the ACL to the correct interfaces
+-interface g0/0
+ip access-group 199 in
+exit
+-interface g0/1
+ip access-group 199 in
+exit
 -interface g0/2
 ip access-group 199 in
 exit
@@ -109,9 +115,9 @@ show access-lists 100
 show ip interface g0/0
 show running-config | include access-group
 
-6.
-
-
-
 ## 📚 Key Learnings
--
+-Directional control with ACLs  
+• Protocol filtering using TCP/UDP port numbers  
+• Subnet-specific access with wildcard masks  
+• Realistic traffic flow control in enterprise LANs                                                                                                                                                                           
+
