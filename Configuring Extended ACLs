@@ -72,6 +72,44 @@ Scenario 2
    In this scenario, devices on one LAN are allowed to remotely access devices in another LAN using the SSH protocol. Besides ICMP, all traffic from other networks is denied.
    Task 1:  Configure, Apply and Verify an Extended Numbered ACL
 
+## 🛠 Steps Taken (Task 1)
+1. set up the topology
+
+2. Configured devices in accordance with presented addressing table
+| Device  | Interface | IP Address    | Subnet Mask     | Default Gateway |
+| ------- | --------- | ------------- | --------------- | --------------- |
+| **RTA** | G0/0      | 10.101.117.49 | 255.255.255.248 | N/A             |
+|         | G0/1      | 10.101.117.33 | 255.255.255.240 | N/A             |
+|         | G0/2      | 10.101.117.1  | 255.255.255.224 | N/A             |
+| **PCA** | NIC       | 10.101.117.51 | 255.255.255.248 | 10.101.117.49   |
+| **PCB** | NIC       | 10.101.117.35 | 255.255.255.240 | 10.101.117.33   |
+| **SWA** | VLAN 1    | 10.101.117.50 | 255.255.255.248 | 10.101.117.49   |
+| **SWB** | VLAN 1    | 10.101.117.34 | 255.255.255.240 | 10.101.117.33   |
+| **SWC** | VLAN 1    | 10.101.117.2  | 255.255.255.224 | 10.101.117.1    |
+
+-to give the routers multiple ports for serial cable connectivity. I turned off the routers and added an HWIC-1GE-SFP cover and switched them back on 
+
+3.  Create the Extended ACL on RTA
+-Use ACL 100 and permit SSH (TCP port 22) and ICMP only.
+-conf t
+access-list 199 permit tcp 10.101.117.0 0.0.0.31 10.101.117.32 0.0.0.15 eq 22
+access-list 199 permit icmp 10.101.117.0 0.0.0.31 10.101.117.32 0.0.0.15
+access-list 199 deny ip any any
+exit
+
+4. Apply the ACL to the G0/2 interface
+-interface g0/2
+ip access-group 199 in
+exit
+
+5. Verify the extended ACL implementation
+-PC> ssh -l Admin 10.101.117.2
+- Verify commands
+show access-lists 100
+show ip interface g0/0
+show running-config | include access-group
+
+6.
 
 
 
